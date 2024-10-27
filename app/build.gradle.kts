@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -22,13 +23,34 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
+        debug {
+            isMinifyEnabled = false
+            applicationIdSuffix = ".debug"
+        }
     }
+
+    flavorDimensions += "http-client"
+
+    productFlavors {
+        create("retrofit") {
+            applicationIdSuffix = ".retrofit"
+            versionNameSuffix = "-retrofit"
+            dimension = "http-client"
+        }
+
+        create("ktor") {
+            applicationIdSuffix = ".ktor"
+            versionNameSuffix = "-ktor"
+            dimension = "http-client"
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -66,4 +88,9 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    "retrofitImplementation"(libs.retrofit)
+
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
 }
