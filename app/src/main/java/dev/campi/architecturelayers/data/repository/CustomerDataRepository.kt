@@ -9,20 +9,33 @@ class CustomerDataRepository(
     private val fakeDataSource: FakeDataSource
 ) : CustomerRepository {
     override fun getCustomer(id: Int): Customer {
-        return fakeDataSource.fakeCustomerDTO.toCustomer()
+        return fakeDataSource.getCustomerById(id).toCustomer()
     }
 }
 
 // FakeDataSource, podría ser acceso a una base de datos, a una API, a un archivo, etc.
 object FakeDataSource {
-    val fakeCustomerDTO = CustomerDTO(
-        1,
-        "John Doe",
-        "example@gmail.com",
-        30,
-        "Calle Falsa 123",
-        "555-1234"
+    private val customers = listOf(
+        CustomerDTO(
+            1,
+            "John Doe",
+            "example@gmail.com",
+            30,
+            "Calle Falsa 123",
+            "555-1234"
+        ),
+        CustomerDTO(
+            2,
+            "Jane Smith",
+            "jane@example.com",
+            25,
+            "Fake Street 456",
+            "555-5678"
+        )
     )
+
+    fun getCustomerById(id: Int): CustomerDTO =
+        customers.firstOrNull { it.id == id } ?: customers.first()
 }
 
 
